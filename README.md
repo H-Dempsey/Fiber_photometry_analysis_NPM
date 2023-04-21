@@ -31,4 +31,5 @@ GUI for the analysis of data from the NPM (Neurophotometrics) Fiber Photometry S
 <img src="https://user-images.githubusercontent.com/101311642/233563487-c6ce6657-3cd6-4376-ade6-edfca11b12fd.png" width="400">
 <img src="https://user-images.githubusercontent.com/101311642/233563598-3be691d6-a533-4c64-b548-e8c93a978cbd.png" width="400">
 <img src="https://user-images.githubusercontent.com/101311642/233563933-e98105b3-0368-43ca-8089-8261a58124c0.png" width="400">
+<img src="https://user-images.githubusercontent.com/101311642/233565881-79421429-c7b8-4ccb-84c6-cd35f08b6227.png" width="400">
 <img src="https://user-images.githubusercontent.com/101311642/233563824-dbab6976-c527-41ba-b3ba-42bd78a2388e.png" width="400">
