@@ -1,12 +1,6 @@
 # Fiber_photometry_analysis_NPM
 GUI for the analysis of data from the NPM (Neurophotometrics) Fiber Photometry System. <br>
 
-### Guide
-All the text in the GUI windows have explanations, which you can access by hovering your cursor over the text. <br>
-This should be comprehensive enough to provide all the instructions for a guide.
-<p align="center">
-<img src="https://user-images.githubusercontent.com/101311642/236766390-d2f16647-e198-44b2-812f-bb24a6e91ac8.png" width="400">
-
 ### Simple installation
 
 Download the executable file for Mac or PC and double click to open it! <br>
@@ -48,6 +42,12 @@ Run the codes.
 ```
 python Codes/Run_program.py
 ```
+
+### Guide
+All the text in the GUI windows have explanations, which you can access by hovering your cursor over the text. <br>
+This should be comprehensive enough to provide all the instructions for a guide.
+<p align="center">
+<img src="https://user-images.githubusercontent.com/101311642/236766390-d2f16647-e198-44b2-812f-bb24a6e91ac8.png" width="400">
 
 ## Here is the manual scoring workflow
 <p align="center">
