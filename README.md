@@ -3,6 +3,7 @@ GUI for the analysis of data from the NPM (Neurophotometrics) Fiber Photometry S
 
 ## Guide
 All the text in the GUI windows have explanations, which you can access by hovering your cursor over the text. <br>
+This should be comprehensive enough to provide all the instructions for a guide.
 <p align="center">
 <img src="https://user-images.githubusercontent.com/101311642/236766390-d2f16647-e198-44b2-812f-bb24a6e91ac8.png" width="400">
 
