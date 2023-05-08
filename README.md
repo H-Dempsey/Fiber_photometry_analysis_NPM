@@ -1,5 +1,49 @@
 # Fiber_photometry_analysis_NPM
-GUI for the analysis of data from the NPM (Neurophotometrics) Fiber Photometry System.
+GUI for the analysis of data from the NPM (Neurophotometrics) Fiber Photometry System. <br>
+
+## Guide
+All the text in the GUI windows have explanations, which you can access by hovering your cursor over the text. <br>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/101311642/236766390-d2f16647-e198-44b2-812f-bb24a6e91ac8.png" width="400">
+
+### Installation
+
+Install [Anaconda Navigator](https://www.anaconda.com/products/distribution). <br>
+Open Anaconda Prompt (on Mac open terminal and install X-Code when prompted). <br>
+Download this repository to your home directory by typing in the line below.
+```
+git clone https://github.com/Andrews-Lab/Fiber_photometry_analysis.git
+```
+If you receive an error about git, install git using the line below, type "Y" when prompted and then re-run the line above.
+```
+conda install -c anaconda git
+```
+Change the directory to the place where the downloaded folder is. <br>
+```
+cd Fiber_photometry_analysis
+```
+
+Create a conda environment and install the dependencies.
+```
+conda env create -n FPA -f Dependencies.yaml
+```
+
+### Usage
+Open Anaconda Prompt (on Mac open terminal). <br>
+Change the directory to the place where the git clone was made.
+```
+cd Fiber_photometry_analysis
+```
+
+Activate the conda environment.
+```
+conda activate FPA
+```
+
+Run the codes.
+```
+python fipho.py
+```
 
 ## Here is the manual scoring workflow
 <p align="center">
