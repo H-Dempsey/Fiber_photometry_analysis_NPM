@@ -123,6 +123,49 @@ def export_event_timestamps_eva_roberta(inputs, outputs):
     
     return(outputs)
 
+def export_event_timestamps_claire(inputs, outputs):
+    
+    # Create a dictionary that converts video frames to system times.
+    import_location = os.path.dirname(inputs['Import location'])
+    video_times_path = os.path.join(import_location, '*video timestamp*')
+    video_times_path = glob(video_times_path)[0]
+    video_times = pd.read_csv(video_times_path, usecols=['Timestamp.Timestamp'])['Timestamp.Timestamp']
+    video_times.index = range(len(video_times))
+    total_duration = video_times.iloc[-1] - video_times.iloc[0]
+    last_frame_number = video_times.index[-1]
+    convert = video_times.to_dict()
+    def convert_frames_to_secs(frame):
+        return(convert[frame])
+    
+    # Process the output data in a format that is usable for the rest of the analysis.
+    raw_data = pd.DataFrame(outputs)
+    raw_data = raw_data.rename(columns={'Event start times': 'Event start times (frames)', 
+                                        'Event end times':   'Event end times (frames)'})
+    data_cols_frames = ['Event start times (frames)', 'Event end times (frames)']
+    data_cols_secs   = ['Event start times (secs)',   'Event end times (secs)']
+    raw_data[data_cols_frames] = raw_data[data_cols_frames].replace({'Empty':last_frame_number})
+    raw_data[data_cols_secs]   = raw_data[data_cols_frames].applymap(convert_frames_to_secs)
+    outputs['Raw data'] = raw_data
+    outputs['Total duration (secs)'] = total_duration
+    
+    # Export the raw data.
+    import_name = os.path.basename(inputs['Import location'])
+    export_name = 'Timestamps for '+import_name+'.csv'
+    export_destination = os.path.join(inputs['Export location'], export_name)
+    outputs['Raw data'].to_csv(export_destination, index=False)
+    
+    # Export this data, so it can be used by the Fibre photometry GUI.
+    new_video_times_name = 'Test_all_photom_videotime_secs_since_box_turned_on.csv'
+    new_video_times_path = os.path.join(import_location, new_video_times_name)
+    video_times.to_csv(new_video_times_path, index=False, header=False)
+    total_duration = video_times.iloc[-1] - video_times.iloc[0]
+    last_frame_number = video_times.index[-1]
+    convert = video_times.to_dict()
+    def convert_frames_to_secs(frame):
+        return(convert[frame])
+    
+    return(outputs)
+
 # def export_analysed_data(inputs, outputs):
     
 #     raw_data = outputs['Raw data']

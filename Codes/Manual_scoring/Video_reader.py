@@ -14,16 +14,14 @@ class PrintWindow(QMainWindow):
 
         # create widgets and layout for the print window
         self.text_edit = QTextEdit(self)
-        self.print_button = QPushButton("Print", self)
         layout = QVBoxLayout()
         layout.addWidget(self.text_edit)
-        layout.addWidget(self.print_button)
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
-
-        # connect button click signal to print text method
-        self.print_button.clicked.connect(self.print_text)
+        
+        # set the geometry of the main window
+        self.setGeometry(100, 100, 500, 600)
 
     def print_text(self, message):
         # print some text to the text edit widget

@@ -36,7 +36,7 @@ def choose_import_export_num_behaviours(inputs):
                          "interval is actually inconsistent (e.g. the difference \n"+
                          "between frame 1 and 2 is 0.05 secs, frame 2 and frame \n"+
                          "3 is 0.04 secs, ...)")),
-                sg.Combo(['Eva/Roberta','Leigh/Xavier'],key="Format",
+                sg.Combo(['Eva/Roberta','Leigh/Xavier','Claire'],key="Format",
                 enable_events=True,default_value=default['Format'])]]
     layout += [[sg.T("")], [sg.Button("Submit")]]
     window  = sg.Window('Manual scoring GUI', layout)

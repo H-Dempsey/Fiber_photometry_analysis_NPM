@@ -17,19 +17,22 @@ def epoch_analysis(inputs):
     # Find the time ranges.
     time_ranges = []
     excluded_events = []
-    for time in event_start_times:
-        epoch_start     = time+inputs['t-range'][0]
-        epoch_end       = time+inputs['t-range'][1]+inputs['t-range'][0]
-        recording_start = all_data['Timestamps'].iloc[0]
-        recording_end   = all_data['Timestamps'].iloc[-1]
+    recording_start = all_data['Timestamps'].iloc[0]
+    recording_end   = all_data['Timestamps'].iloc[-1]
+    for i in range(len(event_start_times)):
+        epoch_start = event_start_times[i]+inputs['t-range'][0]
+        epoch_end   = event_start_times[i]+inputs['t-range'][1]+inputs['t-range'][0]
         if epoch_start < recording_start or epoch_end > recording_end:
-            excluded_events += [str(time)]
+            excluded_events += [i]
         else:
             time_ranges += [[epoch_start, epoch_end]]
     if len(excluded_events) > 0:
-        print(f'PLEASE NOTE: {len(excluded_events)} events with start times '+
-              ', '.join(excluded_events)+' (secs) have been excluded from the '+
+        print(f'PLEASE NOTE: {len(excluded_events)} events have been excluded from the '+
               'analysis because the epoch windows go outside of the recording period.')
+        inputs['Event start times'][event_ind] = list(
+            np.delete(inputs['Event start times'][event_ind], excluded_events))
+        inputs['Event end times'  ][event_ind] = list(
+            np.delete(inputs['Event end times'  ][event_ind], excluded_events))
     
     # Find the data ranges corresponding to these time ranges.
     timestamps = []
@@ -90,10 +93,15 @@ def epoch_analysis(inputs):
                 zscore[i] = dF[i]*0
     
     # Find the baseline Z-Score.
-    elif inputs['Baseline type'] == 'Constant':
-        
+    else:
+        if inputs['Baseline type'] == 'Constant (overall)':
+            baseline_start = inputs['Baseline period'][0]
+            baseline_end   = inputs['Baseline period'][1]
+        elif inputs['Baseline type'] == 'Constant (time since start)':
+            baseline_start = inputs['Baseline period'][0] + inputs['Start time']
+            baseline_end   = inputs['Baseline period'][1] + inputs['Start time']
+
         # Define variables to be used later.
-        baseline_start, baseline_end = inputs['Baseline period']
         custom_range = ((all_data['Timestamps']>baseline_start)&
                         (all_data['Timestamps']<baseline_end))
         control_baseline = all_data[custom_range]['Control']
@@ -115,7 +123,7 @@ def epoch_analysis(inputs):
     outputs = {'zScore':zscore, 'dFF':dFF, 'ISOS':control, 'Fit':dF,
                'GCaMP':signal, 'Timestamps':timestamps_centred}
     
-    return(outputs)
+    return(inputs, outputs)
 
 def graph_epoch_analysis(outputs):
     

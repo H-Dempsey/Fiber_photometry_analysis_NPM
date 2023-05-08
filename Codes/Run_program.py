@@ -4,7 +4,8 @@ from Fibre_photometry.Create_GUI import (choose_which_type_analysis,
     choose_basic_NPM_options, choose_name_NPM_event, choose_peri_event_options, 
     choose_video_snippet_options, choose_events_for_whole_recording, 
     choose_whole_recording_options, choose_peak_detection_options,
-    choose_location_for_settings_file, choose_the_groups_to_plot)
+    choose_location_for_settings_file, choose_the_groups_to_plot,
+    create_loading_bar, update_loading_bar)
 from Fibre_photometry.Data_processing import (import_settings_excel_file, 
     import_NPM_data, create_annotated_video, export_settings_excel_file)
 from Fibre_photometry.Peri_events import (epoch_analysis, graph_epoch_analysis, 
@@ -23,7 +24,8 @@ from Manual_scoring.Video_reader import Manual_Scoring_GUI
 from Manual_scoring.Input_data_processing import (read_existing_settings_file, 
     export_manual_scoring_settings)
 from Manual_scoring.Output_data_processing import (export_event_timestamps_eva_roberta, 
-    export_event_timestamps_leigh_xavier)
+    export_event_timestamps_leigh_xavier, export_event_timestamps_claire)
+import PySimpleGUI as sg
 
 # Import a loading bar module.
 # from tqdm import tqdm
@@ -40,7 +42,7 @@ while True:
         if len(list_inputs) == 1:
             inputs = list_inputs[0]
             inputs = import_NPM_data(inputs)
-            outputs = epoch_analysis(inputs)
+            inputs, outputs = epoch_analysis(inputs)
             outputs = create_headers_for_data(inputs, outputs)
             if inputs['Create snippets'] == True:
                 create_annotated_video(inputs, outputs)
@@ -62,7 +64,7 @@ while True:
                 # ... put this data in manually.
                 # Run the set of NPM GUIs.
                 inputs = import_NPM_data(inputs)
-                outputs = epoch_analysis(inputs)
+                inputs, outputs = epoch_analysis(inputs)
                 outputs = create_headers_for_data(inputs, outputs)
             
                 if inputs['Create snippets'] == True:
@@ -101,7 +103,7 @@ while True:
             if inputs['Create snippets'] == True:
                 inputs = choose_video_snippet_options(inputs)
             
-            outputs = epoch_analysis(inputs)
+            inputs, outputs = epoch_analysis(inputs)
             outputs = create_headers_for_data(inputs, outputs)
 
             if inputs['Create snippets'] == True:
@@ -127,7 +129,7 @@ while True:
         
             if inputs['Raw data'] == True:
                 export_whole_recording_data(inputs, outputs)
-                
+
             continue
                 
         export_settings_excel_file(inputs)
@@ -149,23 +151,33 @@ while True:
             outputs = export_event_timestamps_eva_roberta(inputs, outputs)
         elif inputs['Format'] == 'Leigh/Xavier':
             outputs = export_event_timestamps_leigh_xavier(inputs, outputs)
+        elif inputs['Format'] == 'Claire':
+            outputs = export_event_timestamps_claire(inputs, outputs)
             
         continue
-            
+
     if inputs['Analysis type'] == "Analyse many folders":
+        
         # Import the options for analysis from a settings excel file or ...
         inputs = choose_location_for_grouped_analysis(inputs)
         grouped_data = initialize_grouped_data()
         grouped_data, list_inputs = analyse_many_folders(grouped_data, inputs)
         analyse_grouped_data = True
-    
-        # Run the correct code, based on the information in the settings excel file.
-        # for inputs in tqdm(list_inputs, ncols=70):
-        for inputs in list_inputs:
+
+        # Create the loading bar window
+        window = create_loading_bar(len(list_inputs))
+        event, values = window.read(timeout=100)
+        for i in range(len(list_inputs)):
+            
+            inputs = list_inputs[i]
+            # Update the progress bar at the start of each iteration
+            update_loading_bar(window, i+1)
+
+            # Your analysis code for each iteration
             # ... put this data in manually.
             # Run the set of NPM GUIs.
             inputs = import_NPM_data(inputs)
-            outputs = epoch_analysis(inputs)
+            inputs, outputs = epoch_analysis(inputs)
             outputs = create_headers_for_data(inputs, outputs)
         
             if inputs['Create snippets'] == True:
@@ -190,6 +202,49 @@ while True:
             export_grouped_data(grouped_data, inputs)
             
         export_settings_excel_file(list_inputs)
-            
+        
+        # Close the window
+        window.close()
         continue
+            
+    # if inputs['Analysis type'] == "Analyse many folders":
+    #     # Import the options for analysis from a settings excel file or ...
+    #     inputs = choose_location_for_grouped_analysis(inputs)
+    #     grouped_data = initialize_grouped_data()
+    #     grouped_data, list_inputs = analyse_many_folders(grouped_data, inputs)
+    #     analyse_grouped_data = True
+    
+    #     # Run the correct code, based on the information in the settings excel file.
+    #     # for inputs in tqdm(list_inputs, ncols=70):
+    #     for inputs in list_inputs:
+    #         # ... put this data in manually.
+    #         # Run the set of NPM GUIs.
+    #         inputs = import_NPM_data(inputs)
+    #         inputs, outputs = epoch_analysis(inputs)
+    #         outputs = create_headers_for_data(inputs, outputs)
+        
+    #         if inputs['Create snippets'] == True:
+    #             create_annotated_video(inputs, outputs)
+            
+    #         if inputs['Image'] == True:
+    #             outputs = graph_epoch_analysis(outputs)
+    #             export_preview_image_peri_events(inputs, outputs)
+            
+    #         if inputs['Create grouped data'] == True:
+    #             grouped_data = add_to_grouped_data(grouped_data, inputs, outputs)
+    #             analyse_grouped_data = True
+        
+    #         outputs = combine_header_and_data(outputs)
+    #         export_analysed_data_peri_events(inputs, outputs)
+                
+    #     if analyse_grouped_data == True:
+    #         grouped_data = organise_grouped_data(grouped_data)
+    #         grouped_data = graph_epoch_analysis_grouped(grouped_data)
+    #         export_grouped_plots(grouped_data, inputs)
+    #         grouped_data = combine_header_and_data(grouped_data)
+    #         export_grouped_data(grouped_data, inputs)
+            
+    #     export_settings_excel_file(list_inputs)
+            
+    #     continue
             

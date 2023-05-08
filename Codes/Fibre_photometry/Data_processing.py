@@ -5,8 +5,8 @@ import os
 import cv2 as cv
 from copy import deepcopy
 import matplotlib.pyplot as plt
-from tqdm import tqdm
 from glob import glob
+import PySimpleGUI as sg
 
 def wavelength_to_ledstate(wavelength):
     convert = {'415':1, '470':2, '560':4}
@@ -129,6 +129,20 @@ def import_NPM_data(inputs):
     
     return(inputs)
 
+def create_loading_bar(max_value):
+    # Define the layout of the window
+    layout = [[sg.Text('Please wait while video snippets for each event are created.')],
+              [sg.ProgressBar(max_value, orientation='h', key='progressbar2', size=(30,20))]]
+
+    # Create the window
+    window = sg.Window('Loading Bar Example', layout)
+
+    return window
+
+def update_loading_bar(window, value):
+    # Update the progress bar
+    window['progressbar2'].update_bar(value)
+
 def create_annotated_video(inputs, outputs):
     
     import matplotlib
@@ -182,8 +196,11 @@ def create_annotated_video(inputs, outputs):
     os.makedirs(export_path)
     
     # for i in tqdm(range(len(signal.columns)), ncols=70):
+    window = create_loading_bar(len(signal.columns))
+    event, values = window.read(timeout=100)
     for i in range(len(signal.columns)):
-
+        
+        update_loading_bar(window, i+1)
         event_ind = inputs['Event names'].index(inputs['Name'])
         event     = inputs['Event start times'][event_ind][i]
         start     = event + inputs['t-range'][0]
