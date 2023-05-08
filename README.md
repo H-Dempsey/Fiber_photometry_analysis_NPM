@@ -2,7 +2,7 @@
 GUI for the analysis of data from the NPM (Neurophotometrics) Fiber Photometry System. <br>
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/101311642/236769619-c9528927-04ff-44fe-af31-e18d1acc5258.png" width="700">
+<img src="https://user-images.githubusercontent.com/101311642/236769619-c9528927-04ff-44fe-af31-e18d1acc5258.png" width="550">
 
 ### Simple installation
 
