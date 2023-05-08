@@ -3,7 +3,7 @@ GUI for the analysis of data from the NPM (Neurophotometrics) Fiber Photometry S
 
 ### Simple installation
 
-Download the executable file for Mac or PC and double click to open it! <br>
+Download the executable file for Mac or PC and double click to open it (note that it will take a while to start up). <br>
 
 ### Anaconda installation
 
