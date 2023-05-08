@@ -1,6 +1,8 @@
 # Fiber_photometry_analysis_NPM
 GUI for the analysis of data from the NPM (Neurophotometrics) Fiber Photometry System. <br>
 
+![image](https://user-images.githubusercontent.com/101311642/236769619-c9528927-04ff-44fe-af31-e18d1acc5258.png)
+
 ### Simple installation
 
 Download the executable file for Mac or PC and double click to open it (note that it will take a while to start up). <br>
