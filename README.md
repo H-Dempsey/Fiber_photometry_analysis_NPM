@@ -17,7 +17,7 @@ Install [Anaconda Navigator](https://www.anaconda.com/products/distribution). <b
 Open Anaconda Prompt (on Mac open terminal and install X-Code when prompted). <br>
 Download this repository to your home directory by typing in the line below.
 ```
-git clone https://github.com/Andrews-Lab/Fiber_photometry_analysis.git
+git clone https://github.com/Andrews-Lab/Fiber_photometry_analysis_NPM.git
 ```
 If you receive an error about git, install git using the line below, type "Y" when prompted and then re-run the line above.
 ```
@@ -25,29 +25,28 @@ conda install -c anaconda git
 ```
 Change the directory to the place where the downloaded folder is. <br>
 ```
-cd Fiber_photometry_analysis
+cd Fiber_photometry_analysis_NPM
 ```
 
 Create a conda environment and install the dependencies.
 ```
-conda env create -n FPA -f Dependencies.yaml
+conda env create -n NPM -f Dependencies.yaml
 ```
 
-### Usage
-Open Anaconda Prompt (on Mac open terminal). <br>
+To use these codes, close and re-open Anaconda Prompt (or Terminal on Mac) <br>
 Change the directory to the place where the git clone was made.
 ```
-cd Fiber_photometry_analysis
+cd Fiber_photometry_analysis_NPM
 ```
 
 Activate the conda environment.
 ```
-conda activate FPA
+conda activate NPM
 ```
 
 Run the codes.
 ```
-python fipho.py
+python Codes/Run_program.py
 ```
 
 ## Here is the manual scoring workflow
