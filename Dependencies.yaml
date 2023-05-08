@@ -1,0 +1,19 @@
+name: Fiber_photometry_analysis
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - PyQt5
+    - PySimpleGUI
+    - numpy
+    - pandas
+    - opencv-python
+    - matplotlib
+    - openpyxl
+    - scikit-learn
+    - scipy
+    - tabulate
+    - seaborn
+    - qdarkstyle
