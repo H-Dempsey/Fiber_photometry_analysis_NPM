@@ -1,13 +1,17 @@
 # Fiber_photometry_analysis_NPM
 GUI for the analysis of data from the NPM (Neurophotometrics) Fiber Photometry System. <br>
 
-## Guide
+### Guide
 All the text in the GUI windows have explanations, which you can access by hovering your cursor over the text. <br>
 This should be comprehensive enough to provide all the instructions for a guide.
 <p align="center">
 <img src="https://user-images.githubusercontent.com/101311642/236766390-d2f16647-e198-44b2-812f-bb24a6e91ac8.png" width="400">
 
-### Installation
+### Simple installation
+
+Download the executable file for Mac or PC and double click to open it! <br>
+
+### Anaconda installation
 
 Install [Anaconda Navigator](https://www.anaconda.com/products/distribution). <br>
 Open Anaconda Prompt (on Mac open terminal and install X-Code when prompted). <br>
