@@ -88,7 +88,7 @@ This should be comprehensive enough to provide all the instructions for a guide.
 <img src="https://user-images.githubusercontent.com/101311642/233565881-79421429-c7b8-4ccb-84c6-cd35f08b6227.png" width="400">
 <img src="https://user-images.githubusercontent.com/101311642/233563824-dbab6976-c527-41ba-b3ba-42bd78a2388e.png" width="400">
 
-### Acknowledgements
+## Acknowledgements
 
 __Author:__ <br>
 [Harry Dempsey](https://github.com/H-Dempsey) <br>
@@ -96,3 +96,7 @@ __Author:__ <br>
 __Credits:__ <br>
 Neurophotometrics, Leigh Walker, Eva Guerrero Hreins, Xavier Maddern, Roberta Goncalves Anversa, Laura Milton, Kyna Conn, Claire Foldi, Andrew Lawrence
   
+__About the labs:__ <br>
+The [Lawrence lab](https://irp.drugabuse.gov/staff-members/marisela-morales/) investigates the motivation to seek and consume alcohol and aims to identify novel therapeutic targets for alcohol and substance use disorders. <br>
+The [Foldi lab](https://www.monash.edu/discovery-institute/foldi-lab) investigates the biological underpinnings of anorexia nervosa and feeding disorders. <br>
+The [Brown lab]([https://www.root-lab.org/](https://biomedicalsciences.unimelb.edu.au/sbs-research-groups/biochemistry-and-pharmacology-research/robyn-brown-laboratory)) investigates motivated behaviour, overeating in obesity and addiction using behavioural neuroscience techniques. <br>
