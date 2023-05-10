@@ -87,3 +87,12 @@ This should be comprehensive enough to provide all the instructions for a guide.
 <img src="https://user-images.githubusercontent.com/101311642/233563933-e98105b3-0368-43ca-8089-8261a58124c0.png" width="400">
 <img src="https://user-images.githubusercontent.com/101311642/233565881-79421429-c7b8-4ccb-84c6-cd35f08b6227.png" width="400">
 <img src="https://user-images.githubusercontent.com/101311642/233563824-dbab6976-c527-41ba-b3ba-42bd78a2388e.png" width="400">
+
+### Acknowledgements
+
+__Author:__ <br>
+[Harry Dempsey](https://github.com/H-Dempsey) <br>
+
+__Credits:__ <br>
+Neurophotometrics, Leigh Walker, Eva Guerrero Hreins, Xavier Maddern, Roberta Goncalves Anversa, Laura Milton, Kyna Conn, Claire Foldi, Andrew Lawrence
+  
