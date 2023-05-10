@@ -99,4 +99,4 @@ Neurophotometrics, Leigh Walker, Eva Guerrero Hreins, Xavier Maddern, Roberta Go
 __About the labs:__ <br>
 The [Lawrence lab](https://irp.drugabuse.gov/staff-members/marisela-morales/) investigates the motivation to seek and consume alcohol and aims to identify novel therapeutic targets for alcohol and substance use disorders. <br>
 The [Foldi lab](https://www.monash.edu/discovery-institute/foldi-lab) investigates the biological underpinnings of anorexia nervosa and feeding disorders. <br>
-The [Brown lab](https://www.root-lab.org/](https://biomedicalsciences.unimelb.edu.au/sbs-research-groups/biochemistry-and-pharmacology-research/robyn-brown-laboratory) investigates motivated behaviour, overeating in obesity and addiction using behavioural neuroscience techniques. <br>
+The [Brown lab](https://biomedicalsciences.unimelb.edu.au/sbs-research-groups/biochemistry-and-pharmacology-research/robyn-brown-laboratory) investigates motivated behaviour, overeating in obesity and addiction using behavioural neuroscience techniques. <br>
