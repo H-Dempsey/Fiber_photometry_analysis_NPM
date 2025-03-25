@@ -6,7 +6,6 @@ dependencies:
   - pip
   - pip:
     - PyQt5
-    - PySimpleGUI
     - numpy
     - pandas
     - opencv-python
