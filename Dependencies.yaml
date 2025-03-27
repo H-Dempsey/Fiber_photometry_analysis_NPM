@@ -16,3 +16,4 @@ dependencies:
     - tabulate
     - seaborn
     - qdarkstyle
+    - tqdm
