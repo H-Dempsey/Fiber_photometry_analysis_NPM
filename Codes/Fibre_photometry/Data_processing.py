@@ -7,6 +7,7 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 from glob import glob
 import PySimpleGUI as sg
+from tqdm import tqdm
 
 def wavelength_to_ledstate(wavelength):
     convert = {'415':1, '470':2, '560':4}
@@ -205,12 +206,12 @@ def create_annotated_video(inputs, outputs):
     export_path = os.path.join(inputs['Export location'], folder_name)
     os.makedirs(export_path)
     
-    # for i in tqdm(range(len(signal.columns)), ncols=70):
-    window = create_loading_bar(len(signal.columns))
-    event, values = window.read(timeout=100)
-    for i in range(len(signal.columns)):
+    for i in tqdm(range(len(signal.columns)), ncols=70):
+    # window = create_loading_bar(len(signal.columns))
+    # event, values = window.read(timeout=100)
+    # for i in range(len(signal.columns)):
         
-        update_loading_bar(window, i+1)
+        # update_loading_bar(window, i+1)
         event_ind = inputs['Event names'].index(inputs['Name'])
         event     = inputs['Event start times'][event_ind][i]
         start     = event + inputs['t-range'][0]
@@ -278,8 +279,8 @@ def create_annotated_video(inputs, outputs):
             # redraw the canvas
             fig.canvas.draw()
             # convert canvas to image
-            img = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
-            img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+            img = np.frombuffer(fig.canvas.tostring_argb(), dtype=np.uint8)
+            img = img.reshape(fig.canvas.get_width_height()[::-1] + (4,))[:, :, 1:4]
             # img is rgb, convert to opencv's default bgr
             img = cv.cvtColor(img,cv.COLOR_RGB2BGR)
             img = cv.resize(img, (graph_width, graph_height))
