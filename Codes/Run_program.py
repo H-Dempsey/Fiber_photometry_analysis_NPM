@@ -216,9 +216,7 @@ if __name__ == "__main__":
     try:
         main()
     except Exception:
-        # import sys
-        # sys.excepthook(*sys.exc_info())
         import sys
-        sys.__excepthook__(*sys.exc_info())
+        sys.excepthook(*sys.exc_info())
     finally:
         input("\nPress Enter to exit...")
