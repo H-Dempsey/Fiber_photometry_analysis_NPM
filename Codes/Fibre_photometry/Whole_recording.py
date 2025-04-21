@@ -74,6 +74,8 @@ def add_event_info(time, onsets, offsets, notes):
 
 def create_export_plots(inputs, outputs):
     
+    mpl.use('agg')
+    
     outputs['Plots'] = {}
     outputs['Dataframe'] = {}
     stats = ['zScore','dFF','ISOS','GCaMP']
@@ -125,24 +127,24 @@ def create_export_plots(inputs, outputs):
                 else:
                     plt.axvspan(start, end, color=event_color_inter[event_name], label=event_name, linewidth=2)
                     
-        if inputs['Detection type'] == 'Entire recording':
-            detection_start = outputs['Timestamps'].iloc[0]
-            detection_end   = outputs['Timestamps'].iloc[-1]
-        elif inputs['Detection type'] == 'Interval (time since start)':
-            detection_start = inputs['Detection interval'][0] + inputs['Start time']
-            detection_end   = inputs['Detection interval'][1] + inputs['Start time']
-        elif inputs['Detection type'] == 'Interval (overall time)':
-            detection_start = inputs['Detection interval'][0]
-            detection_end   = inputs['Detection interval'][1]
-
-        custom_range = ((outputs['Timestamps']>=detection_start)&
-                        (outputs['Timestamps']<=detection_end))
-        y_data = outputs[stat][custom_range].copy()
-        y_data.index = range(len(y_data))
-        x_data = outputs['Timestamps'][custom_range].copy()
-        x_data.index = range(len(x_data))
-                    
         if inputs['Peak detection'] == True:
+                    
+            if inputs['Detection type'] == 'Entire recording':
+                detection_start = outputs['Timestamps'].iloc[0]
+                detection_end   = outputs['Timestamps'].iloc[-1]
+            elif inputs['Detection type'] == 'Interval (time since start)':
+                detection_start = inputs['Detection interval'][0] + inputs['Start time']
+                detection_end   = inputs['Detection interval'][1] + inputs['Start time']
+            elif inputs['Detection type'] == 'Interval (overall time)':
+                detection_start = inputs['Detection interval'][0]
+                detection_end   = inputs['Detection interval'][1]
+    
+            custom_range = ((outputs['Timestamps']>=detection_start)&
+                            (outputs['Timestamps']<=detection_end))
+            y_data = outputs[stat][custom_range].copy()
+            y_data.index = range(len(y_data))
+            x_data = outputs['Timestamps'][custom_range].copy()
+            x_data.index = range(len(x_data))
 
             # Plot the peaks over the top of the whole recording plot.
             peaks, properties = find_peaks(y_data, prominence=inputs['Prominence']) 
@@ -220,7 +222,7 @@ def create_export_plots(inputs, outputs):
         outputs['Raw data '+stat] = raw_data
         plt.close()
         
-        return(outputs)
+    return(outputs)
 
 def export_whole_recording_plots(inputs, outputs):
     

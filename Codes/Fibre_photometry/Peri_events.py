@@ -127,6 +127,9 @@ def epoch_analysis(inputs):
 
 def graph_epoch_analysis(outputs):
     
+    import matplotlib
+    matplotlib.use('agg')
+    
     # Create a figure with the required number of subplots
     num_subplots = 0
     if 'ISOS' in outputs.keys() and 'GCaMP' in outputs.keys() and 'Fit' in outputs.keys():
@@ -216,6 +219,9 @@ def graph_epoch_analysis(outputs):
     return(outputs)
 
 def graph_epoch_analysis_grouped(outputs):
+    
+    import matplotlib
+    matplotlib.use('agg')
     
     # Create a figure with the required number of subplots
     num_subplots = 0

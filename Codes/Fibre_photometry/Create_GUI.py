@@ -7,8 +7,9 @@ def recognise_bool(value):
     dict1 = {'True':True, 'False':False}
     return(dict1[value])
 def convert_color(value):
-    convert_color = {'0 green':'Region0G','1 red':'Region1R','2 green':'Region2G','3 red':'Region3R',
-                     '0 red':'Region0R','1 green':'Region1G','2 red':'Region2R','3 green':'Region3G'}
+    convert_color = {
+        '0 green':'Region0G','1 red':  'Region1R','2 green':'Region2G','3 red':  'Region3R',
+        '0 red':  'Region0R','1 green':'Region1G','2 red':  'Region2R','3 green':'Region3G'}
     return(convert_color[value])
 def wavelength_to_ledstate(wavelength):
     convert = {'415':1, '470':2, '560':4}

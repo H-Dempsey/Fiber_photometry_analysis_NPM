@@ -1,3 +1,5 @@
+print("Loading NPM Analysis GUI")
+
 # Import the functions for fibre photometry analysis.
 from Fibre_photometry.Create_GUI import (choose_which_type_analysis, 
     choose_location_for_grouped_analysis, analyse_many_folders, 
@@ -24,14 +26,14 @@ from Manual_scoring.Video_reader import Manual_Scoring_GUI
 from Manual_scoring.Input_data_processing import (read_existing_settings_file, 
     export_manual_scoring_settings)
 from Manual_scoring.Output_data_processing import (export_event_timestamps_eva_roberta, 
-    export_event_timestamps_leigh_xavier, export_event_timestamps_claire)
-import PySimpleGUI as sg
+    export_event_timestamps_leigh_xavier, export_event_timestamps_claire,
+    check_video_integrity)
 
 # Import a loading bar module.
-# from tqdm import tqdm
+from tqdm import tqdm
 
-while True:
-    
+def main():
+        
     inputs = {}
     inputs = choose_which_type_analysis(inputs)
     
@@ -59,8 +61,8 @@ while True:
             analyse_grouped_data = True
         
             # Run the correct code, based on the information in the settings excel file.
-            # for inputs in tqdm(list_inputs, ncols=70):
-            for inputs in list_inputs:
+            for inputs in tqdm(list_inputs):
+            # for inputs in list_inputs:
                 # ... put this data in manually.
                 # Run the set of NPM GUIs.
                 inputs = import_NPM_data(inputs)
@@ -88,7 +90,7 @@ while True:
                 grouped_data = combine_header_and_data(grouped_data)
                 export_grouped_data(grouped_data, inputs)
                 
-        continue
+        main()
 
     if inputs['Analysis type'] == "Analyse one folder":
         # ... put this data in manually.
@@ -130,11 +132,11 @@ while True:
             if inputs['Raw data'] == True:
                 export_whole_recording_data(inputs, outputs)
 
-            continue
+            main()
                 
         export_settings_excel_file(inputs)
         
-        continue
+        main()
 
     if inputs['Analysis type'] == 'Manually score videos':
         inputs = choose_import_export_num_behaviours(inputs)
@@ -147,14 +149,16 @@ while True:
             export_manual_scoring_settings(inputs)
     
         outputs = Manual_Scoring_GUI(inputs)
+        check_video_integrity(inputs)
+        
         if inputs['Format'] == 'Eva/Roberta':
             outputs = export_event_timestamps_eva_roberta(inputs, outputs)
         elif inputs['Format'] == 'Leigh/Xavier':
             outputs = export_event_timestamps_leigh_xavier(inputs, outputs)
         elif inputs['Format'] == 'Claire':
             outputs = export_event_timestamps_claire(inputs, outputs)
-            
-        continue
+        
+        main()
 
     if inputs['Analysis type'] == "Analyse many folders":
         
@@ -165,13 +169,14 @@ while True:
         analyse_grouped_data = True
 
         # Create the loading bar window
-        window = create_loading_bar(len(list_inputs))
-        event, values = window.read(timeout=100)
-        for i in range(len(list_inputs)):
+        # window = create_loading_bar(len(list_inputs))
+        # event, values = window.read(timeout=100)
+        # for i in range(len(list_inputs)):
+        for inputs in tqdm(list_inputs):
             
-            inputs = list_inputs[i]
+            # inputs = list_inputs[i]
             # Update the progress bar at the start of each iteration
-            update_loading_bar(window, i+1)
+            # update_loading_bar(window, i+1)
 
             # Your analysis code for each iteration
             # ... put this data in manually.
@@ -204,47 +209,16 @@ while True:
         export_settings_excel_file(list_inputs)
         
         # Close the window
-        window.close()
-        continue
-            
-    # if inputs['Analysis type'] == "Analyse many folders":
-    #     # Import the options for analysis from a settings excel file or ...
-    #     inputs = choose_location_for_grouped_analysis(inputs)
-    #     grouped_data = initialize_grouped_data()
-    #     grouped_data, list_inputs = analyse_many_folders(grouped_data, inputs)
-    #     analyse_grouped_data = True
-    
-    #     # Run the correct code, based on the information in the settings excel file.
-    #     # for inputs in tqdm(list_inputs, ncols=70):
-    #     for inputs in list_inputs:
-    #         # ... put this data in manually.
-    #         # Run the set of NPM GUIs.
-    #         inputs = import_NPM_data(inputs)
-    #         inputs, outputs = epoch_analysis(inputs)
-    #         outputs = create_headers_for_data(inputs, outputs)
-        
-    #         if inputs['Create snippets'] == True:
-    #             create_annotated_video(inputs, outputs)
-            
-    #         if inputs['Image'] == True:
-    #             outputs = graph_epoch_analysis(outputs)
-    #             export_preview_image_peri_events(inputs, outputs)
-            
-    #         if inputs['Create grouped data'] == True:
-    #             grouped_data = add_to_grouped_data(grouped_data, inputs, outputs)
-    #             analyse_grouped_data = True
-        
-    #         outputs = combine_header_and_data(outputs)
-    #         export_analysed_data_peri_events(inputs, outputs)
-                
-    #     if analyse_grouped_data == True:
-    #         grouped_data = organise_grouped_data(grouped_data)
-    #         grouped_data = graph_epoch_analysis_grouped(grouped_data)
-    #         export_grouped_plots(grouped_data, inputs)
-    #         grouped_data = combine_header_and_data(grouped_data)
-    #         export_grouped_data(grouped_data, inputs)
-            
-    #     export_settings_excel_file(list_inputs)
-            
-    #     continue
-            
+        # window.close()
+        main()
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception:
+        # import sys
+        # sys.excepthook(*sys.exc_info())
+        import sys
+        sys.__excepthook__(*sys.exc_info())
+    finally:
+        input("\nPress Enter to exit...")

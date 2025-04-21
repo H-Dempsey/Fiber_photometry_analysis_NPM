@@ -1,3 +1,4 @@
+import os
 import sys
 import cv2
 import qdarkstyle
@@ -8,24 +9,24 @@ from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtWidgets import (QApplication, QLabel, QMainWindow, QSlider, QTextEdit,
     QHBoxLayout, QVBoxLayout, QWidget, QPushButton, QShortcut, QSizePolicy)
 
-class PrintWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
+# class PrintWindow(QMainWindow):
+#     def __init__(self):
+#         super().__init__()
 
-        # create widgets and layout for the print window
-        self.text_edit = QTextEdit(self)
-        layout = QVBoxLayout()
-        layout.addWidget(self.text_edit)
-        widget = QWidget()
-        widget.setLayout(layout)
-        self.setCentralWidget(widget)
+#         # create widgets and layout for the print window
+#         self.text_edit = QTextEdit(self)
+#         layout = QVBoxLayout()
+#         layout.addWidget(self.text_edit)
+#         widget = QWidget()
+#         widget.setLayout(layout)
+#         self.setCentralWidget(widget)
         
-        # set the geometry of the main window
-        self.setGeometry(100, 100, 500, 600)
+#         # set the geometry of the main window
+#         self.setGeometry(100, 100, 500, 600)
 
-    def print_text(self, message):
-        # print some text to the text edit widget
-        self.text_edit.append(message)
+#     def print_text(self, message):
+#         # print some text to the text edit widget
+#         self.text_edit.append(message)
         
 def print_keys_for_scoring(inputs):
     
@@ -171,10 +172,18 @@ class Manual_Scoring_Interface(QMainWindow):
         
         # Add a logging window.
         # create widgets and layout for the main window
-        self.print_window = PrintWindow()
-        self.print_window.show()
-        self.print_window.print_text(print_keys_for_scoring(inputs))
-
+        # self.print_window = PrintWindow()
+        # self.print_window.show()
+        # self.print_window.print_text(print_keys_for_scoring(inputs))
+        print(print_keys_for_scoring(inputs))
+        
+        # Create a folder to write the output images to.
+        input_video   = os.path.basename(self.inputs['Import location'])
+        export_folder = os.path.dirname(self.inputs['Import location'])
+        new_folder    = f"Extracted frames from {input_video}"
+        self.frame_extraction_folder = os.path.join(export_folder, new_folder)
+        os.makedirs(self.frame_extraction_folder, exist_ok=True)
+    
     def pauseVideo(self):
         self.paused = not self.paused
         if self.paused:
@@ -191,12 +200,12 @@ class Manual_Scoring_Interface(QMainWindow):
         for i in range(skip_frames):
             self.cap.grab()
         # Read the next frame from the video file
-        ret, frame = self.cap.read()
+        ret, self.frame = self.cap.read()
         # If the video file has ended, stop the timer and return
         if not ret:
             return
         # Convert the frame to a QImage and set it as the pixmap for the video player widget
-        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
         height, width, channels = image.shape
         qimage = QImage(image.data, width, height, channels * width, QImage.Format_RGB888)
         pixmap = QPixmap.fromImage(qimage)
@@ -295,12 +304,12 @@ class Manual_Scoring_Interface(QMainWindow):
         # Set the position of the video to the new position
         self.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
         # Read the new frame from the video file
-        ret, frame = self.cap.read()
+        ret, self.frame = self.cap.read()
         # If the video file has ended, return
         if not ret:
             return
         # Convert the frame to a QImage and set it as the pixmap for the video player widget
-        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
         height, width, channels = image.shape
         qimage = QImage(image.data, width, height, channels * width, QImage.Format_RGB888)
         pixmap = QPixmap.fromImage(qimage)
@@ -328,12 +337,12 @@ class Manual_Scoring_Interface(QMainWindow):
         # Set the position of the video to the new position
         self.cap.set(cv2.CAP_PROP_POS_FRAMES, position)
         # Read the new frame from the video file
-        ret, frame = self.cap.read()
+        ret, self.frame = self.cap.read()
         # If the video file has ended, return
         if not ret:
             return
         # Convert the frame to a QImage and set it as the pixmap for the video player widget
-        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
         height, width, channels = image.shape
         qimage = QImage(image.data, width, height, channels * width, QImage.Format_RGB888)
         pixmap = QPixmap.fromImage(qimage)
@@ -350,21 +359,26 @@ class Manual_Scoring_Interface(QMainWindow):
         self.time_label.setText(f"{current_time_str} / {total_time_str}, {position} / {total_frames}")
     
     def processKeyPress(self, key):
+        
         frame_no = int(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
         frame_no -= 1
         num_frames = len(self.outputs['Event names'])
         ind = self.inputs['Event keys'].index(key)
         event_name = self.inputs['Event names'][ind]
         event_type = self.inputs['Event types'][ind]
+        
         if event_type == 'Point event':
             self.outputs['Event names']       += [event_name]
             self.outputs['Event start times'] += [frame_no]
             self.outputs['Event end times']   += [frame_no]
             print(f'({num_frames}) Saved frame {frame_no} for {event_name}')
-            self.print_window.print_text(f'({num_frames}) Saved frame {frame_no} for {event_name}')
+            # self.print_window.print_text(f'({num_frames}) Saved frame {frame_no} for {event_name}')
+            
         elif event_type == 'Mutually exclusive':
+            
             if len(self.mutually_exclusive_events) > 0 and self.mutually_exclusive_events[-1] != event_name:
                 self.outputs['Event end times'][self.mutually_exclusive_indices[-1]] = frame_no   
+                
             if len(self.mutually_exclusive_events) == 0 or self.mutually_exclusive_events[-1] != event_name:
                 self.outputs['Event names']       += [event_name]
                 self.outputs['Event start times'] += [frame_no]
@@ -372,8 +386,10 @@ class Manual_Scoring_Interface(QMainWindow):
                 self.mutually_exclusive_events    += [event_name]
                 self.mutually_exclusive_indices   += [num_frames]           
                 print(f'({num_frames}) Saved frame {frame_no} for {event_name}')
-                self.print_window.print_text(f'({num_frames}) Saved frame {frame_no} for {event_name}')
+                # self.print_window.print_text(f'({num_frames}) Saved frame {frame_no} for {event_name}')
+                
         elif event_type == 'Start-stop event':
+            
             if event_name not in self.start_stop_active_events:
                 self.outputs['Event names']       += [event_name]
                 self.outputs['Event start times'] += [frame_no]
@@ -381,6 +397,7 @@ class Manual_Scoring_Interface(QMainWindow):
                 self.start_stop_active_events  += [event_name]
                 self.start_stop_active_indices += [num_frames]
                 start_or_stop = 'start'
+                
             elif event_name in self.start_stop_active_events:
                 active_ind = self.start_stop_active_events.index(event_name)
                 event_ind  = self.start_stop_active_indices[active_ind]
@@ -388,30 +405,48 @@ class Manual_Scoring_Interface(QMainWindow):
                 self.start_stop_active_events.remove(event_name) 
                 self.start_stop_active_indices.remove(event_ind)
                 start_or_stop = 'stop'
+                
             print(f'({num_frames}) Saved frame {frame_no} for {event_name} ({start_or_stop})')
-            self.print_window.print_text(f'({num_frames}) Saved frame {frame_no} for {event_name} ({start_or_stop})')
+            # self.print_window.print_text(f'({num_frames}) Saved frame {frame_no} for {event_name} ({start_or_stop})')
+            
+        # Export the frame as an image.
+        export_image = os.path.join(self.frame_extraction_folder, f"{frame_no}.png")
+        cv2.imwrite(export_image, self.frame)
             
     def deleteEvent(self):
+        
         if len(self.outputs['Event names']) > 0:
             event_name = self.outputs['Event names'][-1]
             start_time = self.outputs['Event start times'][-1]
+            end_time   = self.outputs['Event end times'][-1]
             self.outputs['Event names']       = self.outputs['Event names'][:-1]
             self.outputs['Event start times'] = self.outputs['Event start times'][:-1]
             self.outputs['Event end times']   = self.outputs['Event end times'][:-1]
             ind = self.inputs['Event names'].index(event_name)
             event_type = self.inputs['Event types'][ind]
+            
             if event_type == 'Mutually exclusive':
                 self.mutually_exclusive_events  = self.mutually_exclusive_events[:-1]
                 self.mutually_exclusive_indices = self.mutually_exclusive_indices[:-1]
+                
                 if len(self.mutually_exclusive_events) > 0:
                     self.outputs['Event end times'][self.mutually_exclusive_indices[-1]] = 'Empty'
+                    
             elif event_type == 'Start-stop event':
+                
                 if event_name in self.start_stop_active_events:
                     active_ind = self.start_stop_active_events.index(event_name)
                     event_ind  = self.start_stop_active_indices[active_ind]
                     self.start_stop_active_events.remove(event_name)
                     self.start_stop_active_indices.remove(event_ind)
+                    
             print(f'# Deleted frame {start_time} for {event_name}')
+            
+            # Delete the exported frame image.
+            for time in [start_time, end_time]:
+                image = os.path.join(self.frame_extraction_folder, f"{time}.png")
+                if os.path.exists(image):
+                    os.remove(image)
         else:
             print('# There are no more frames to delete')
             

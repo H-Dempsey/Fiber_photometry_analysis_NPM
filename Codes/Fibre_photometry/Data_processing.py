@@ -18,6 +18,14 @@ def convert_color(value):
     convert_color = {'Region0G':'0 green','Region1R':'1 red','Region2G':'2 green','Region3R':'3 red',
                      'Region0R':'0 red','Region1G':'1 green','Region2R':'2 red','Region3G':'3 green'}
     return(convert_color[value])
+def rename_cols(value):
+    convert_new = {"G0":"Region0G","R1":"Region1R","G2":"Region2G","R3":"Region3R",
+                   "R0":"Region0R","G1":"Region1G","R2":"Region2R","G3":"Region3G",
+                   "SystemTimestamp":"Timestamp"}
+    if value in convert_new.keys():
+        return(convert_new[value])
+    else:
+        return(value)
 def convert_str_to_list(value):
     # If "[1,2]" is found, return [1,2]
     if type(value) == str and value[0] == '[' and value[-1] == ']':
@@ -54,6 +62,7 @@ def cursory_import_NPM_data(import_location):
             continue
         # Analyse the recording data file.
         if 'LedState' in df.columns:
+            df.columns = [rename_cols(col) for col in df.columns]
             input_info['Colors'] = [convert_color(header) for header in df.columns if 'Region' in header]
             input_info['Wavelengths'] = [ledstate_to_wavelength(ledstate) for ledstate in df['LedState'].unique()
                            if ledstate in [1,2,4]]
@@ -85,6 +94,7 @@ def import_NPM_data(inputs):
         if 'LedState' in df.columns:
 
             # Record the start time.
+            df.columns = [rename_cols(col) for col in df.columns]
             inputs['Start time'] = df['Timestamp'].iloc[0]
             
             # Align the control and signal data by the corresponding timestamps.

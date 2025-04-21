@@ -7,7 +7,7 @@ def choose_import_export_num_behaviours(inputs):
     default["Import location"] = r"C:\Users\hazza\Desktop\Lab meeting presentation - Florey\Example folder 1\Test_all_photom_video mouse 2_2022-09-09T15_11_45.avi"
     default["Export location"] = r"C:\Users\hazza\Desktop\Lab meeting presentation - Florey\Example folder 1"
     default["Num"]             = 4
-    default["Format"]          = 'Eva/Roberta'       
+    default["Format"]          = 'Leigh/Xavier'       
     sg.theme("DarkTeal2")
     layout  = []
     layout += [[sg.T("")], [sg.Text("Choose the location of the video to score",size=(29,1),

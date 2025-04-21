@@ -1,7 +1,10 @@
 import pandas as pd
+import numpy as np
 import os
 import sys
+import cv2
 from glob import glob
+from tqdm import tqdm
 
 # Define auxiliary functions.
 def latency_to_first(list1):
@@ -18,6 +21,14 @@ def duration(list1):
         return(sum_durations)
 def enlist(list1):
     return([list1])
+def rename_cols(value):
+    convert_new = {"G0":"Region0G","R1":"Region1R","G2":"Region2G","R3":"Region3R",
+                   "R0":"Region0R","G1":"Region1G","R2":"Region2R","G3":"Region3G",
+                   "SystemTimestamp":"Timestamp"}
+    if value in convert_new.keys():
+        return(convert_new[value])
+    else:
+        return(value)
 
 def export_event_timestamps_leigh_xavier(inputs, outputs):
     
@@ -30,18 +41,7 @@ def export_event_timestamps_leigh_xavier(inputs, outputs):
     video_times_path = glob(video_times_path)[0]
     video_times = pd.read_csv(video_times_path, usecols=[0], header=None)[0]
     video_times.index = range(len(video_times))
-    # Find the start time of the recording in milliseconds since midnight.
-    recording_times_path = os.path.join(import_location, 'PhotometryData_CompTimes*')
-    if len(glob(recording_times_path)) == 0:
-        print('Could not find the recording timestamps file starting with "PhotometryData_CompTimes".')
-        sys.exit()
-    recording_times_path = glob(recording_times_path)[0]
-    recording_times = pd.read_csv(recording_times_path)['ComputerTimestamp']
-    recording_start_time = recording_times.iloc[0]
-    # Convert to milliseconds since the recording started.
-    video_times = video_times - recording_start_time
-    # Convert milliseonds to seconds.
-    video_times = video_times / 1000
+    
     # Find the time since the box was turned on.
     import_files = [file for file in os.listdir(import_location) if 
                     (file.endswith(".csv") and file.startswith("~$")==False)]
@@ -53,12 +53,21 @@ def export_event_timestamps_leigh_xavier(inputs, outputs):
         except:
             continue
         if 'LedState' in df.columns:
+            df.columns = [rename_cols(col) for col in df.columns]
             recording_start_time2 = df['Timestamp'].iloc[0]
             found_recording_file = True
             break
     if found_recording_file == False:
         print('Could not find file that contains the photometry neural recording data.')
         sys.exit()
+
+    # Find the start time of the recording in milliseconds since midnight.
+    recording_start_time = df['ComputerTimestamp'].iloc[0]
+    # Convert to milliseconds since the recording started.
+    video_times = video_times - recording_start_time
+    # Convert milliseonds to seconds.
+    video_times = video_times / 1000
+
     # Convert video_times to video time since the NPM box was turned on.
     video_times = video_times + recording_start_time2
     # Export this data, so it can be used by the Fibre photometry GUI.
@@ -212,3 +221,65 @@ def export_event_timestamps_claire(inputs, outputs):
 #     outputs['Analysed data'].to_csv(export_destination, index=False, header=False)
 
 #     return(outputs)
+
+def check_video_integrity(inputs):
+    
+    print("\nChecking that the extracted frame numbers are accurate.")
+    
+    # Create an array of the image frame numbers with corresponding numpy arrays.
+    input_video   = os.path.basename(inputs['Import location'])
+    export_folder = os.path.dirname(inputs['Import location'])
+    new_folder    = f"Extracted frames from {input_video}"
+    image_folder  = os.path.join(export_folder, new_folder)
+    image_paths   = glob(os.path.join(image_folder, "*.png"))
+    image_arrays  = {int(os.path.basename(path)[:-4]): cv2.imread(path) for path in image_paths}
+    
+    # Go through the video and check that the frame numbers are accurate.
+    i = 0
+    contact_Harry = False
+    cap = cv2.VideoCapture(inputs['Import location'])
+    mostly_accurate_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    pbar = tqdm(total=mostly_accurate_count)
+    
+    while True:
+        
+        grabbed = cap.grab()
+        if not grabbed:
+            break
+        
+        if i in image_arrays.keys():
+            ret, frame = cap.retrieve()
+            if not ret:
+                print("Something is wrong with the frame checking.")
+            if not np.array_equal(image_arrays[i], frame):
+                contact_Harry = True
+        
+        i += 1
+        pbar.update(1)
+        
+        if i > pbar.total:
+            pbar.total = i
+            pbar.refresh()
+    
+    pbar.close()
+    if contact_Harry:
+        print("\nThe frame numbers are not all accurate.")
+    else:
+        print("\nAll frame numbers are accurate.")
+    
+    # Check that the number of frames i is the same as the number of data rows.
+    video_times_path = os.path.join(export_folder, 'VideoOutput*')
+    if len(glob(video_times_path)) == 0:
+        print('Could not find the video timestamps file starting with "VideoOutput".')
+        sys.exit()
+        
+    video_times_path = glob(video_times_path)[0]
+    video_times = pd.read_csv(video_times_path, usecols=[0], header=None)[0]
+    if len(video_times) == i and len(video_times) == mostly_accurate_count:
+        print("Video length matches the video timestamps length.")
+    else:
+        print("Video length does NOT match the videotimestamp length.")
+        contact_Harry = True
+        
+    if contact_Harry:
+        print("***Contact Harry about fixing the videos for manual scoring***")
