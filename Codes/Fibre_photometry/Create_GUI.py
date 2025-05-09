@@ -312,12 +312,25 @@ def analyse_many_folders(grouped_data, inputs):
                     window.Element(row_heading+col_headings[i]).Update(
                         values[row_heading+col_headings[0]])
         if event == 'Submit':
+            
+            # Create an export folder for the grouped data analysis.
+            export_folder = import_location
+            folder_name = 'Grouped Analysis0'
+            i = 1
+            while folder_name in os.listdir(export_folder):
+                folder_name = folder_name[:-1] + str(i)
+                i += 1
+            export_path = os.path.join(export_folder, folder_name)
+            os.makedirs(export_path)
+            
+            # Create a list of input dictionaries for each folder to analyse.
             list_inputs = []
             for col_heading in col_headings:
                 inputs = {}
                 inputs['Create grouped data']    = True
                 inputs['Grouped data file name'] = 'Grouped data'
                 inputs['Grouped data location'] = import_location
+                inputs['Grouped data export folder'] = export_path
                 inputs['Import location']  = os.path.join(import_location, col_heading)
                 inputs['Export location']  = os.path.join(import_location, col_heading)
                 inputs['Analysis']         = 'Peri-events'

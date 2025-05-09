@@ -196,14 +196,18 @@ def create_annotated_video(inputs, outputs):
     # Create a variable for the signal.
     signal = outputs[inputs['Snippets signal']]
     print('Creating video snippets for '+str(len(signal.columns))+' epochs.')
-    
+ 
     # Create a folder in the export location with the snipped videos.
+    if "Create grouped data" in inputs.keys() and inputs["Create grouped data"]:
+        export_folder = inputs["Grouped data export folder"]
+    else:
+        export_folder = inputs['Export location']
     folder_name = 'Video snippets0'
     i = 1
-    while folder_name in os.listdir(inputs['Export location']):
+    while folder_name in os.listdir(export_folder):
         folder_name = folder_name[:-1] + str(i)
         i += 1
-    export_path = os.path.join(inputs['Export location'], folder_name)
+    export_path = os.path.join(export_folder, folder_name)
     os.makedirs(export_path)
     
     for i in tqdm(range(len(signal.columns)), ncols=70):
@@ -257,9 +261,15 @@ def create_annotated_video(inputs, outputs):
         line1, = plt.plot([], [], 'g-', lw=1.5)
         plt.axvline(x = 0, color = 'lightgray', linestyle='dashed')
         
+        export_name = (
+            os.path.basename(inputs['Import location']) + "_" + inputs['Animal ID'] + "_" +
+            inputs['Analysis name']    + "_" + inputs['ISOS wavelength']  + "_" +
+            inputs['ISOS color'][-2:]  + "_" + inputs['GCaMP wavelength'] + "_" +
+            inputs['GCaMP color'][-2:] + "_" + "Event "+str(i)+".mp4"
+        )
         cap = cv.VideoCapture(import_destination)
         cap.set(cv.CAP_PROP_POS_FRAMES, start)
-        result = cv.VideoWriter(os.path.join(export_path, 'Event '+str(i)+'.mp4'), 
+        result = cv.VideoWriter(os.path.join(export_path, export_name), 
                                 cv.VideoWriter_fourcc(*'mp4v'),
                                 fps, (final_width, final_height))
     
@@ -309,13 +319,14 @@ def export_settings_excel_file(list_inputs):
         list_inputs1 = [list_inputs1]
         export_location = list_inputs1[0]['Export location']
     else:
-        export_location = list_inputs1[0]['Grouped data location']
+        export_location = list_inputs1[0]['Grouped data export folder']
     
     # Create a list of inputs that are not needed to re-create the analysis.
     inputs_exclude = ['Settings', 'Event start times', 'Event end times', 
         'Event names', 'Start time', 'Control', 'Signal', 'Timestamps',
         'ISOS ledstate', 'GCaMP ledstate', 'Create grouped data',
-        'Grouped data file name', 'Grouped data location', 'Analysis type']
+        'Grouped data file name', 'Grouped data location', 'Analysis type',
+        'Grouped data export folder']
     
     # Remove these inputs.
     for i in range(len(list_inputs1)):

@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-        
+
 def initialize_grouped_data():
     
     stats = ['zScore','dFF','ISOS','GCaMP','Fit']
@@ -49,7 +49,7 @@ def organise_grouped_data(grouped_data):
 def export_grouped_plots(grouped_data, inputs):
     
     # Create a figure.
-    export_destination = os.path.join(inputs['Grouped data location'], 
+    export_destination = os.path.join(inputs['Grouped data export folder'], 
                                       inputs['Grouped data file name']+'.png')
     grouped_data['Figure'].savefig(export_destination)
     
@@ -59,7 +59,7 @@ def export_grouped_data(grouped_data, inputs):
     stats = ['zScore','dFF','ISOS','GCaMP','Fit']
     stats_to_export  = [stat for stat in stats if stat in grouped_data.keys()]
     for stat in stats_to_export:
-        export_destination = os.path.join(inputs['Grouped data location'], 
+        export_destination = os.path.join(inputs['Grouped data export folder'], 
                                           inputs['Grouped data file name']+'.csv')
         grouped_data[stat].to_csv(export_destination, index=False, header=False)
         
