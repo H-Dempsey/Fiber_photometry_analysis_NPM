@@ -1,5 +1,3 @@
-print("Loading NPM Analysis GUI")
-
 # Import the functions for fibre photometry analysis.
 from Fibre_photometry.Create_GUI import (choose_which_type_analysis, 
     choose_location_for_grouped_analysis, analyse_many_folders, 
@@ -16,8 +14,9 @@ from Fibre_photometry.Peri_events import (epoch_analysis, graph_epoch_analysis,
     graph_epoch_analysis_grouped)
 from Fibre_photometry.Whole_recording import (whole_recording_analysis, 
     create_export_plots, export_whole_recording_plots, export_whole_recording_data)
-from Fibre_photometry.Group_analysis import (initialize_grouped_data, add_to_grouped_data, 
-    organise_grouped_data, export_grouped_plots, export_grouped_data)
+from Fibre_photometry.Group_analysis import (initialize_grouped_data, 
+    add_to_grouped_data, organise_grouped_data, export_grouped_plots, 
+    export_grouped_data)
 
 # Import the functions for the manual scoring.
 from Manual_scoring.Option_windows import (choose_import_export_num_behaviours, 
@@ -32,7 +31,7 @@ from Manual_scoring.Output_data_processing import (export_event_timestamps_eva_r
 # Import a loading bar module.
 from tqdm import tqdm
 
-def main():
+while True:
         
     inputs = {}
     inputs = choose_which_type_analysis(inputs)
@@ -90,7 +89,7 @@ def main():
                 grouped_data = combine_header_and_data(grouped_data)
                 export_grouped_data(grouped_data, inputs)
                 
-        main()
+        continue
 
     if inputs['Analysis type'] == "Analyse one folder":
         # ... put this data in manually.
@@ -132,11 +131,11 @@ def main():
             if inputs['Raw data'] == True:
                 export_whole_recording_data(inputs, outputs)
 
-            main()
+            continue
                 
         export_settings_excel_file(inputs)
         
-        main()
+        continue
 
     if inputs['Analysis type'] == 'Manually score videos':
         inputs = choose_import_export_num_behaviours(inputs)
@@ -158,7 +157,7 @@ def main():
         elif inputs['Format'] == 'Claire':
             outputs = export_event_timestamps_claire(inputs, outputs)
         
-        main()
+        continue
 
     if inputs['Analysis type'] == "Analyse many folders":
         
@@ -210,13 +209,4 @@ def main():
         
         # Close the window
         # window.close()
-        main()
-
-if __name__ == "__main__":
-    try:
-        main()
-    except Exception:
-        import sys
-        sys.excepthook(*sys.exc_info())
-    finally:
-        input("\nPress Enter to exit...")
+        continue
