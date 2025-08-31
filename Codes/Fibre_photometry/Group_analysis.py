@@ -14,9 +14,9 @@ def add_to_grouped_data(grouped_data, inputs, outputs):
     
     # Add the data to grouped_data.
     stats = ['zScore','dFF','ISOS','GCaMP','Fit']
-    stats_to_export = [stat for stat in stats if inputs['Export '+stat] == True]
+    # stats_to_export = [stat for stat in stats if inputs['Export '+stat] == True]
     grouped_data['Timestamps'] += [outputs['Timestamps']]
-    for stat in stats_to_export:
+    for stat in stats:
         grouped_data[stat]           += [outputs[stat]]
         grouped_data['Header '+stat] += [outputs['Header '+stat]]
         
@@ -57,9 +57,10 @@ def export_grouped_data(grouped_data, inputs):
     
     # Export the data.
     stats = ['zScore','dFF','ISOS','GCaMP','Fit']
-    stats_to_export  = [stat for stat in stats if stat in grouped_data.keys()]
+    # stats_to_export  = [stat for stat in stats if stat in grouped_data.keys()]
+    stats_to_export = [stat for stat in stats if inputs['Export '+stat] == True]
     for stat in stats_to_export:
         export_destination = os.path.join(inputs['Grouped data export folder'], 
-                                          inputs['Grouped data file name']+'.csv')
+                                          inputs['Grouped data file name']+' '+stat+'.csv')
         grouped_data[stat].to_csv(export_destination, index=False, header=False)
         

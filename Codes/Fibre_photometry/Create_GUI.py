@@ -88,7 +88,8 @@ def choose_location_for_grouped_analysis(inputs):
     layout += [[sg.T("")],[sg.Text("Choose the location of the folder containing "+
                                    "many folders for analysis.", tooltip=(
                 'Choose the location of a master folder that contains many subfolders \n'+
-                'for analysis. Folders inside those subfolders will be ignored.'))], 
+                'for analysis. Folders inside those subfolders will be ignored. \n'+
+                'Subfolders that start with "Grouped analysis" will also be ignored.'))], 
                 [sg.Input(key="Grouped data location",enable_events=True,
                          default_text=default["Grouped data location"]),
                 sg.FolderBrowse(key="Import2")]]
@@ -209,6 +210,7 @@ def analyse_many_folders(grouped_data, inputs):
     sg.theme("DarkTeal2")
     import_location = inputs['Grouped data location']
     col_headings = next(os.walk(import_location))[1]
+    col_headings = [folder for folder in col_headings if folder[:16] != "Grouped Analysis"]
     import_locations = [os.path.join(import_location, folder) for folder in col_headings]
     input_info = [cursory_import_NPM_data(import_location) for import_location in import_locations]
     
@@ -233,6 +235,8 @@ def analyse_many_folders(grouped_data, inputs):
                    'Export GCaMP']
     
     columns = []
+    buttons = [[sg.Text('')]]+[[sg.Button('Auto-fill', key=name, pad=((5,0),(0,0)))] for name in row_headings]
+    columns += [sg.Column(buttons)]
     header_col1  = [[sg.Text('')]]+[[sg.Text(name, tooltip=info[name])] for name in row_headings]
     columns    += [sg.Column(header_col1)]
     for i in range(len(col_headings)):
@@ -283,10 +287,7 @@ def analyse_many_folders(grouped_data, inputs):
         columns += [sg.Column(col)]
     layout  = []
     layout += [[sg.Frame('Hover your cursor over the row headers to find out what they mean', 
-                         layout=[[sg.Column([columns], scrollable=True, size=(1100,400))]])]]
-    layout += [[sg.Text('Auto-fill entry from column 1'), 
-                sg.Combo(row_headings, default_value=row_headings[0], key='Auto-fill value'), 
-                sg.Button('Auto-fill')]]
+                         layout=[[sg.Column([columns], scrollable=True, size=(1100,415))]])]]
     layout += [[sg.Text('Choose what groups to plot in the grouped preview image.',
                         tooltip=info['Plot different groups']),
                 sg.Combo(['Everything','Custom name','Animal ID','Filename'],
@@ -300,8 +301,9 @@ def analyse_many_folders(grouped_data, inputs):
         if event == sg.WIN_CLOSED or event=="Exit":
             window.close()
             break
-        if event == 'Auto-fill':
-            row_heading = values['Auto-fill value']
+        # Auto-fill button names.
+        if event in row_headings:
+            row_heading = event
             for i in range(len(col_headings)):
                 if row_heading in ['t-range', 'Video snippet time range', 'Baseline period']:
                     window.Element(row_heading+col_headings[i]+'1').Update(

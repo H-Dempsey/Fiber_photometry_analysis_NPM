@@ -200,15 +200,19 @@ def create_annotated_video(inputs, outputs):
     # Create a folder in the export location with the snipped videos.
     if "Create grouped data" in inputs.keys() and inputs["Create grouped data"]:
         export_folder = inputs["Grouped data export folder"]
+        folder_name = 'Grouped video snippets'
+        export_path = os.path.join(export_folder, folder_name)
+        if os.path.exists(export_path) == False:
+            os.makedirs(export_path)
     else:
         export_folder = inputs['Export location']
-    folder_name = 'Video snippets0'
-    i = 1
-    while folder_name in os.listdir(export_folder):
-        folder_name = folder_name[:-1] + str(i)
-        i += 1
-    export_path = os.path.join(export_folder, folder_name)
-    os.makedirs(export_path)
+        folder_name = 'Video snippets0'
+        i = 1
+        while folder_name in os.listdir(export_folder):
+            folder_name = folder_name[:-1] + str(i)
+            i += 1
+        export_path = os.path.join(export_folder, folder_name)
+        os.makedirs(export_path)
     
     for i in tqdm(range(len(signal.columns)), ncols=70):
     # window = create_loading_bar(len(signal.columns))

@@ -339,10 +339,10 @@ def graph_epoch_analysis_grouped(outputs):
 
 def create_headers_for_data(inputs, outputs):
     
-    stats = ['zScore','dFF','ISOS','GCaMP']
-    stats_to_export = [stat for stat in stats if inputs['Export '+stat] == True]
+    stats = ['zScore','dFF','ISOS','GCaMP','Fit']
+    # stats_to_export = [stat for stat in stats if inputs['Export '+stat] == True]
     
-    for stat in stats_to_export:
+    for stat in stats:
 
         # Create headers for the results.
         header = {}

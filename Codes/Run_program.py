@@ -187,16 +187,16 @@ while True:
             if inputs['Create snippets'] == True:
                 create_annotated_video(inputs, outputs)
             
-            if inputs['Image'] == True:
-                outputs = graph_epoch_analysis(outputs)
-                export_preview_image_peri_events(inputs, outputs)
+            # if inputs['Image'] == True:
+            #     outputs = graph_epoch_analysis(outputs)
+            #     export_preview_image_peri_events(inputs, outputs)
             
             if inputs['Create grouped data'] == True:
                 grouped_data = add_to_grouped_data(grouped_data, inputs, outputs)
                 analyse_grouped_data = True
         
-            outputs = combine_header_and_data(outputs)
-            export_analysed_data_peri_events(inputs, outputs)
+            # outputs = combine_header_and_data(outputs)
+            # export_analysed_data_peri_events(inputs, outputs)
                 
         if analyse_grouped_data == True:
             grouped_data = organise_grouped_data(grouped_data)
