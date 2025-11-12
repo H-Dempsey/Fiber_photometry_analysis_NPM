@@ -4,13 +4,6 @@ GUI for the analysis of data from the [NPM (Neurophotometrics) Fiber Photometry 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/101311642/236769619-c9528927-04ff-44fe-af31-e18d1acc5258.png" width="550">
 
-### Simple installation
-
-Download the executable file for PC and double click to open it (note that it will take a while to start up). <br>
-Unfortunately, this is not compatible with Mac. <br>
-  
-[Download here](https://figshare.com/s/f095bf5f8fd38ef76c6a)
-
 ### Anaconda installation
 
 Install [Anaconda Navigator](https://www.anaconda.com/products/distribution). <br>
